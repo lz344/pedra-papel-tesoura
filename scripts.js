@@ -75,5 +75,3 @@ function playGame() {
     console.log(`Empatamos! A nossa pontuação foi de ${score.human} pontos!`);
   }
 }
-
-playGame();
