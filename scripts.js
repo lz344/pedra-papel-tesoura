@@ -10,68 +10,67 @@ function getComputerChoice() {
   }
 }
 
-function getHumanChoice() {
-  let choiceHuman = prompt(
-    "Escolha entre rock, paper ou scissors: "
-  ).toLocaleLowerCase();
-
-  while (
-    choiceHuman !== "rock" &&
-    choiceHuman !== "paper" &&
-    choiceHuman !== "scissors"
-  ) {
-    choiceHuman = prompt(
-      "Essa não é uma opção valida, escolha entre rock, paper ou scissors: "
-    );
-  }
-
-  return choiceHuman;
-}
-
 function playRound(humanChoice, ComputerChoice, score) {
-  const selection = {
-    rock: "scissors",
-    scissors: "paper",
-    paper: "rock",
-  };
-
   if (humanChoice === ComputerChoice) {
-    console.log(`Empatamos! Ambos escolhemos ${humanChoice}!`);
+    return "tie";
   } else if (selection[humanChoice] === ComputerChoice) {
-    console.log(
-      `Você ganhou! Você escolheu ${humanChoice} e eu escolhi ${ComputerChoice}!`
-    );
     score.human++;
+    return "human";
   } else {
-    console.log(
-      `Eu ganhei! Eu escolhi ${ComputerChoice} e você escolheu ${humanChoice}`
-    );
     score.computer++;
+    return "computer";
   }
 }
 
-function playGame() {
-  let score = {
-    human: 0,
-    computer: 0,
-  };
+function verifyMatch(result, humanChoice, ComputerChoice, score) {
+  console.log(
+    `Placar:\nHumano: ${score.human}\nComputador: ${score.computer}\n`
+  );
 
-  for (let i = 0; i < 5; i++) {
-    const humanSelection = getHumanChoice();
-    const computerSelection = getComputerChoice();
-
-    playRound(humanSelection, computerSelection, score);
-  }
-
-  if (score.human > score.computer) {
+  if (result === "tie") {
+    console.log(`Ambos escolhemos ${humanChoice}! Nenhum ponto foi marcado.`);
+  } else if (result === "human") {
     console.log(
-      `Você ganhou! Placar final\n Humano:${score.human} pontos\n Computador:${score.computer} pontos`
-    );
-  } else if (score.computer > score.human) {
-    console.log(
-      `Eu ganhei! Placar final\n Computador:${score.computer} pontos\n Humano:${score.human} pontos`
+      `Você marcou ponto! Você escolheu ${humanChoice} e eu escolhi ${ComputerChoice}!`
     );
   } else {
-    console.log(`Empatamos! A nossa pontuação foi de ${score.human} pontos!`);
+    console.log(
+      `Eu marquei ponto! Eu escolhi ${ComputerChoice} e você escolheu ${humanChoice}!`
+    );
+  }
+
+  if (score.human === 5 || score.computer === 5) {
+    if (score.human > score.computer) {
+      console.log(`Você ganhou! Parabéns!`);
+    } else {
+      console.log(`Eu ganhei dessa vez!`);
+    }
+
+    score.human = 0;
+    score.computer = 0;
+    console.log(`\nO placar foi zerado. Prepare-se para uma nova partida!`);
   }
 }
+
+const selection = {
+  rock: "scissors",
+  scissors: "paper",
+  paper: "rock",
+};
+
+let score = {
+  human: 0,
+  computer: 0,
+  tie: 0,
+};
+
+const buttons = document.querySelectorAll("button");
+
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const humanSelection = button.id;
+    const computerSelection = getComputerChoice();
+    let result = playRound(humanSelection, computerSelection, score);
+    verifyMatch(result, humanSelection, computerSelection, score);
+  });
+});
