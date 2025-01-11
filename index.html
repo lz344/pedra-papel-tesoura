@@ -4,20 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     
-    <div style="text-align: center;">
+    <div id="game-container">
+      <div class="buttons">
         <button id="paper">paper</button>
         <button id="rock">rock</button>
         <button id="scissors">scissors</button>
+      </div>
+      <div id="scoreboard">
+        <h3>Placar do Jogo</h3>
+        <p>Humano: <span id="humanScore">0</span></p>
+        <p>Máquina: <span id="computerScore">0</span></p>
+      </div>
+      <div id="messages">
+        <p id="message">Vamos jogar?!</p>
+        <p id="winner"></p>
+        <p id="messageScore"></p>
+      </div>
     </div>
-    <div id="results" style="text-align: center;">
-        <h3 id="teste">Placar do Jogo</h3>
-        <p>Humano: <span id="humanScore">0</span> </p>
-        <p>Maquina: <span id="computerScore">0</span>  </p>
-    </div>
-
 
     <script src="scripts.js"></script>
 

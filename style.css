@@ -1,0 +1,11 @@
+div{
+    text-align: center;
+}
+
+#message{
+    font-size: 3rem;
+}
+
+#winner, #messageScore {
+    font-size: 1.5rem;
+}

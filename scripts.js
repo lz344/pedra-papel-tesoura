@@ -1,19 +1,11 @@
 function getComputerChoice() {
-  let choiceComputer = Math.floor(Math.random() * 3);
-
-  if (choiceComputer === 0) {
-    return "rock";
-  } else if (choiceComputer === 1) {
-    return "paper";
-  } else {
-    return "scissors";
-  }
+  const choices = ["rock", "paper", "scissors"];
+  return choices[Math.floor(Math.random() * choices.length)];
 }
 
-function playRound(humanChoice, ComputerChoice, score) {
-  if (humanChoice === ComputerChoice) {
-    return "tie";
-  } else if (selection[humanChoice] === ComputerChoice) {
+function playRound(humanChoice, computerChoice, score) {
+  if (humanChoice === computerChoice) return "tie";
+  if (selection[humanChoice] === computerChoice) {
     score.human++;
     return "human";
   } else {
@@ -22,55 +14,60 @@ function playRound(humanChoice, ComputerChoice, score) {
   }
 }
 
-function verifyMatch(result, humanChoice, ComputerChoice, score) {
-  console.log(
-    `Placar:\nHumano: ${score.human}\nComputador: ${score.computer}\n`
-  );
+function updateScoreboard(score) {
+  humanScore.textContent = score.human;
+  computerScore.textContent = score.computer;
+}
 
+function displayMessage(result, humanChoice, computerChoice) {
   if (result === "tie") {
-    console.log(`Ambos escolhemos ${humanChoice}! Nenhum ponto foi marcado.`);
+    message.textContent = `Ambos escolhemos ${humanChoice}! Nenhum ponto foi marcado.`;
   } else if (result === "human") {
-    console.log(
-      `Você marcou ponto! Você escolheu ${humanChoice} e eu escolhi ${ComputerChoice}!`
-    );
+    message.textContent = `Você marcou ponto! ${humanChoice} vence ${computerChoice}.`;
   } else {
-    console.log(
-      `Eu marquei ponto! Eu escolhi ${ComputerChoice} e você escolheu ${humanChoice}!`
-    );
-  }
-
-  if (score.human === 5 || score.computer === 5) {
-    if (score.human > score.computer) {
-      console.log(`Você ganhou! Parabéns!`);
-    } else {
-      console.log(`Eu ganhei dessa vez!`);
-    }
-
-    score.human = 0;
-    score.computer = 0;
-    console.log(`\nO placar foi zerado. Prepare-se para uma nova partida!`);
+    message.textContent = `Eu marquei ponto! ${computerChoice} vence ${humanChoice}.`;
   }
 }
 
-const selection = {
-  rock: "scissors",
-  scissors: "paper",
-  paper: "rock",
-};
+function checkWinner(score) {
+  if (score.human === 5 || score.computer === 5) {
+    const winnerText =
+      score.human > score.computer ? "Você venceu!" : "Eu venci!";
+    winner.textContent = winnerText;
+    messageScore.textContent =
+      "Clique em qualquer botão para começar uma nova partida!";
 
-let score = {
-  human: 0,
-  computer: 0,
-  tie: 0,
-};
+    score.human = 0;
+    score.computer = 0;
 
-const buttons = document.querySelectorAll("button");
+    gameReset = true;
+  }
+}
 
+const selection = { rock: "scissors", scissors: "paper", paper: "rock" };
+let score = { human: 0, computer: 0 };
+let gameReset = false;
+
+const message = document.querySelector("#message");
+const humanScore = document.querySelector("#humanScore");
+const computerScore = document.querySelector("#computerScore");
+const winner = document.querySelector("#winner");
+const messageScore = document.querySelector("#messageScore");
+
+const buttons = document.querySelectorAll(".buttons button");
 buttons.forEach((button) => {
   button.addEventListener("click", () => {
-    const humanSelection = button.id;
-    const computerSelection = getComputerChoice();
-    let result = playRound(humanSelection, computerSelection, score);
-    verifyMatch(result, humanSelection, computerSelection, score);
+    if (gameReset) {
+      winner.textContent = "";
+      messageScore.textContent = "";
+      gameReset = false;
+    }
+
+    const humanChoice = button.id;
+    const computerChoice = getComputerChoice();
+    const result = playRound(humanChoice, computerChoice, score);
+    updateScoreboard(score);
+    displayMessage(result, humanChoice, computerChoice);
+    checkWinner(score);
   });
 });
